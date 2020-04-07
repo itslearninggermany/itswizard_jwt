@@ -1,14 +1,6 @@
 package itswizard_jwt
 
-import (
-	"errors"
-	jwtmiddleware "github.com/auth0/go-jwt-middleware"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/jinzhu/gorm"
-	"net/http"
-	"strings"
-	"time"
-)
+/*
 
 // AuthMiddleware is our middleware to check our token is valid. Returning
 // a 401 status to the client if it is not valid.
@@ -40,6 +32,7 @@ func AuthMiddlewareJWT(next http.Handler, dbWebserver *gorm.DB) http.Handler {
 /*
 This function get the JWT and checks if the token is expired. When it is expired. A new JWT will be created
 */
+/*
 func GetJWT(r *http.Request) (jwtString string, err error) {
 	res := r.URL.Query()["token"]
 	if len(res) == 0 {
@@ -85,11 +78,14 @@ func GetJWT(r *http.Request) (jwtString string, err error) {
 	return jwtString, err
 }
 
+*/
+
+/*
 func SetJwt() {
 
 	/*
 		Check if JWT is valid
-	*/
+
 
 }
 
@@ -97,3 +93,5 @@ func NewAuth(username string, dbClient *gorm.DB, dbWebserver *gorm.DB) {
 
 	CreateToken(username, dbClient, dbWebserver)
 }
+
+*/
