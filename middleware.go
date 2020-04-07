@@ -1,13 +1,13 @@
 package itswizard_jwt
 
 import (
+	"errors"
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"strings"
 	"time"
-	"errors"
 )
 
 // AuthMiddleware is our middleware to check our token is valid. Returning
@@ -16,12 +16,11 @@ func AuthMiddlewareJWT(next http.Handler, dbWebserver *gorm.DB) http.Handler {
 
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return getAppkey(dbWebserver), nil
+			return GetAuthKeys(dbWebserver).GetKey(), nil
 		},
 		SigningMethod: jwt.SigningMethodHS256,
-		Extractor: GetJWT,
+		Extractor:     GetJWT,
 	})
-
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Let secure process the request. If it returns an error,
@@ -40,7 +39,7 @@ func AuthMiddlewareJWT(next http.Handler, dbWebserver *gorm.DB) http.Handler {
 
 /*
 This function get the JWT and checks if the token is expired. When it is expired. A new JWT will be created
- */
+*/
 func GetJWT(r *http.Request) (jwtString string, err error) {
 	res := r.URL.Query()["token"]
 	if len(res) == 0 {
@@ -55,7 +54,7 @@ func GetJWT(r *http.Request) (jwtString string, err error) {
 	}
 
 	var payload string
-	erg := strings.Split(jwtString,".")
+	erg := strings.Split(jwtString, ".")
 	if len(erg) != 3 {
 		return "", err
 	} else {
@@ -67,8 +66,8 @@ func GetJWT(r *http.Request) (jwtString string, err error) {
 	//in the cookie
 	//	var authJson string
 
-	exp := time.Unix(int64(jwtClaims.Exp),0)
-	if time.Now().Sub(exp) >0 {
+	exp := time.Unix(int64(jwtClaims.Exp), 0)
+	if time.Now().Sub(exp) > 0 {
 
 		fmt.Println("Refresh den Cookie")
 
@@ -83,12 +82,10 @@ func GetJWT(r *http.Request) (jwtString string, err error) {
 
 	//Neues Ding im Cookie speichern
 
-
 	return jwtString, err
 }
 
-
-func SetJwt () {
+func SetJwt() {
 
 	/*
 		Check if JWT is valid
@@ -96,12 +93,7 @@ func SetJwt () {
 
 }
 
-
-func NewAuth (username string, dbClient *gorm.DB, dbWebserver *gorm.DB) {
+func NewAuth(username string, dbClient *gorm.DB, dbWebserver *gorm.DB) {
 
 	CreateToken(username, dbClient, dbWebserver)
 }
-
-
-
-

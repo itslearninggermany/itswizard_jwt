@@ -7,12 +7,9 @@ import (
 	"time"
 )
 
-
-
-func CreateToken (username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string,err error){
+func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string, err error) {
 	var user itswizard_basic.DbItswizardUser15
 	dbUser.Where("username = ?", username).First(&user)
-
 
 	role := ""
 	if user.Admin {
@@ -22,30 +19,28 @@ func CreateToken (username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJ
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": username,
-		"firstName": user.Firstname,
-		"lastName": user.Lastname,
-		"Email": user.Email,
+		"user":           username,
+		"firstName":      user.Firstname,
+		"lastName":       user.Lastname,
+		"Email":          user.Email,
 		"OrganisationID": user.OrganisationID,
-		"role": role,
-		"exp":  time.Now().Add(time.Minute * time.Duration(1)).Unix(),
-		"iat":  time.Now().Unix(),
+		"role":           role,
+		"exp":            time.Now().Add(time.Minute * time.Duration(1)).Unix(),
+		"iat":            time.Now().Unix(),
 	})
 
 	tokenString, err := token.SignedString(GetAuthKeys(dbWebserver).GetKey())
 	if err != nil {
-		return "","", err
+		return "", "", err
 	}
 
 	refreshToken := createRefreshToken(username)
 	err = refreshToken.StoreInDatatbae(dbWebserver)
 	if err != nil {
-		return "","",err
+		return "", "", err
 	}
 
-	auth := setAuthentification("123", tokenString, refreshToken.String())
+	auth := CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
 
-	st := auth.String()
-	return st, tokenString, err
+	return auth, tokenString, err
 }
-
