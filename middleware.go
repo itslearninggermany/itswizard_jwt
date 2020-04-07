@@ -9,7 +9,7 @@ import (
 
 // AuthMiddleware is our middleware to check our token is valid. Returning
 // a 401 status to the client if it is not valid.
-func AuthMiddlewareJWT(next http.Handler, dbWebserver *gorm.DB) http.Handler {
+func AuthMiddlewareJWT(next http.HandlerFunc, dbWebserver *gorm.DB) http.Handler {
 
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
