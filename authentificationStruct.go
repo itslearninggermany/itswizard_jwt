@@ -51,6 +51,6 @@ func DecodeAuthentification(r *http.Request, dbWebserver *gorm.DB) (auth Authent
 			return auth, err
 		}
 		err = json.Unmarshal([]byte(tmp), auth)
-		return
 	}
+	return
 }
