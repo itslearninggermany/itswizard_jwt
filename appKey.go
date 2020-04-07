@@ -8,17 +8,16 @@ type AuthKeys struct {
 	Aes string
 }
 
-
-func GetAuthKeys (dbWebserver *gorm.DB) AuthKeys {
+func GetAuthKeys(dbWebserver *gorm.DB) AuthKeys {
 	var auth AuthKeys
 	dbWebserver.Last(&auth)
 	return auth
 }
 
-func (a *AuthKeys) GetKey () []byte {
+func (a AuthKeys) GetKey() []byte {
 	return []byte(a.Key)
 }
 
-func (a *AuthKeys) GetAes () []byte {
+func (a AuthKeys) GetAes() []byte {
 	return []byte(a.Aes)
 }
