@@ -3,29 +3,32 @@ package itswizard_jwt
 import (
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
+	"net/http"
 )
 
 type RefreshToken struct {
 	gorm.Model
-	refreshToken string
-	username string
+	RefreshToken string
+	Username     string
 }
 
-
-func createRefreshToken (username string) *RefreshToken {
+func createRefreshToken(username string) *RefreshToken {
 	re := new(RefreshToken)
 	u1 := uuid.Must(uuid.NewV4())
-	re.refreshToken = u1.String()
-	re.username = username
+	re.RefreshToken = u1.String()
+	re.Username = username
 	return re
 }
 
-
-func (p *RefreshToken) String () string {
-	return p.refreshToken
+func (p *RefreshToken) String() string {
+	return p.RefreshToken
 }
 
-func (p *RefreshToken) StoreInDatatbae (dbWebserver *gorm.DB) error{
+func (p *RefreshToken) StoreInDatatbae(dbWebserver *gorm.DB) error {
 	return dbWebserver.Save(&p).Error
 }
 
+func Authentificate(r *http.Request) string {
+
+	return ""
+}

@@ -5,6 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/itslearninggermany/uploadrest"
+	"github.com/jinzhu/gorm"
+	"net/http"
+	"strings"
+	"time"
 )
 
 type data struct {
@@ -16,6 +21,44 @@ type data struct {
 	LastName       string `json:"lastName"`
 	Role           string `json:"role"`
 	User           string `json:"user"`
+}
+
+func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB) (string, error) {
+	auth, err := DecodeAuthentification(r, dbWebserver)
+	if err != nil {
+		return "", err
+	}
+	var payload string
+	erg := strings.Split(auth.IDToken, ".")
+	if len(erg) != 3 {
+		return "", err
+	} else {
+		payload = erg[1]
+	}
+	jwtClaims, err := decodePayload(payload)
+
+	exp := time.Unix(int64(jwtClaims.Exp), 0)
+	if time.Now().Sub(exp) > 0 {
+
+		fmt.Println("Refresh den Cookie")
+
+		/*
+			if CheckRefreshToken("asdasd") {
+				_, jwtString, err = CreateToken("username")
+				fmt.Println(jwtString)
+				if err != nil {
+					fmt.Println(err)
+				}
+			}
+		*/
+	}
+
+	/*
+		Check if expired
+	*/
+
+	out, err := uploadrest.Encrypt(GetAuthKeys(dbWebserver).GetAes(), auth.String())
+	return fmt.Sprint("?key=", out), nil
 }
 
 func base64url_decode(b []byte) ([]byte, error) {
