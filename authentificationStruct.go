@@ -41,7 +41,7 @@ func CreateNewAuthUrl(AccessToken, IDToken, RefreshToken string, dbWebserver *go
 	return fmt.Sprint("?key=", out)
 }
 
-func DecodeAuthentification(r http.Request, dbWebserver *gorm.DB) (auth Authentication, err error) {
+func DecodeAuthentification(r *http.Request, dbWebserver *gorm.DB) (auth Authentication, err error) {
 	res := r.URL.Query()["key"]
 	if len(res) == 0 {
 		return auth, errors.New("no token")
