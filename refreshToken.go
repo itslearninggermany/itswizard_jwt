@@ -8,7 +8,7 @@ import (
 
 type RefreshToken struct {
 	gorm.Model
-	RefreshToken string
+	RefreshToken string `gorm:"unique"`
 	Username     string
 }
 
