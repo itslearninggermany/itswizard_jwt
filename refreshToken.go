@@ -56,13 +56,13 @@ func (p *RefreshToken) Valid(username string) bool {
 	if p.Username == username {
 		exist = true
 	} else {
-		return false
 		fmt.Println(p.Username, username)
+		return false
 	}
 
 	if exist {
-		if getHoursScinceCreatet(p.CreatedAt) > 0 {
-			fmt.Println(getHoursScinceCreatet(p.CreatedAt))
+		if getMinutesScinceCreatet(p.CreatedAt) > 120 {
+			fmt.Println(getMinutesScinceCreatet(p.CreatedAt))
 			return false
 		} else {
 			return true
@@ -72,7 +72,7 @@ func (p *RefreshToken) Valid(username string) bool {
 	}
 }
 
-func getHoursScinceCreatet(input time.Time) float64 {
+func getMinutesScinceCreatet(input time.Time) float64 {
 	aus := time.Now().Sub(input)
-	return aus.Hours()
+	return aus.Minutes()
 }
