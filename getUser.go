@@ -24,8 +24,8 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 	}
 
 	user = itszwizard_objects.SessionUser{
-		Username: claims["Username"].(string),
-		//		UserID:              uint(claims["UserID"].(int)),
+		Username:            claims["Username"].(string),
+		UserID:              uint(claims["UserID"].(float64)),
 		FirstAuthentication: claims["FirstAuthentication"].(bool),
 		Authenticated:       claims["Authenticated"].(bool),
 		TwoFac:              claims["TwoFac"].(bool),
@@ -38,8 +38,8 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 		Email:               claims["Email"].(string),
 		Information:         claims["Information"].(string),
 		Admin:               claims["Admin"].(bool),
-		OrganisationID:      claims["OrganisationID"].(uint),
-		InstitutionID:       claims["InstitutionID"].(uint),
+		OrganisationID:      uint(claims["OrganisationID"].(float64)),
+		InstitutionID:       uint(claims["InstitutionID"].(float64)),
 	}
 
 	return

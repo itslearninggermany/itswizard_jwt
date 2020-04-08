@@ -1,6 +1,7 @@
 package itswizard_jwt
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/itslearninggermany/itswizard_basic"
 	"github.com/jinzhu/gorm"
@@ -35,6 +36,9 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 		return "", "", err
 	}
 
+	ip := strings.Split(r.RemoteAddr, ":")
+	fmt.Println(ip)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"Username":            username,
 		"UserID":              user.Model.ID,
@@ -44,7 +48,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 		"Firstname":           user.Firstname,
 		"Lastname":            user.Lastname,
 		"Mobile":              user.Tel,
-		"IpAddress":           strings.Split(r.RemoteAddr, ":")[0],
+		"IpAddress":           ip[0],
 		"Institution":         inst.Name,
 		"School":              orga.Name,
 		"Email":               user.Email,
