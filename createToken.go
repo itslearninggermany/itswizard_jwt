@@ -1,7 +1,6 @@
 package itswizard_jwt
 
 import (
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/itslearninggermany/itswizard_basic"
 	"github.com/jinzhu/gorm"
@@ -50,21 +49,18 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 
 	//Store And logout
 	var jwtSession JwtSession
-	rnf := dbWebserver.Where("user_name = ?", username).First(&jwtToken).RecordNotFound()
-
-	fmt.Println("record Not Found: ", rnf)
-
-	if rnf {
-		fmt.Println("ist nicht vorhanden")
+	if dbWebserver.Where("user_name = ?", username).First(&jwtSession).RecordNotFound()
+	{
 		jwtSession.UserName = username
 		jwtSession.Token = tokenString
 	} else {
-		fmt.Println("ist vorhanden")
 		jwtSession.Token = tokenString
 	}
 
-	dbWebserver.Save(&jwtSession)
-
+	err = dbWebserver.Save(&jwtSession).Error
+	if err != nil {
+		return "","",err
+	}
 	//
 	auth := CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
 
