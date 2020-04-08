@@ -12,15 +12,25 @@ import (
 	"time"
 )
 
-type data struct {
-	Email          string `json:"Email"`
-	OrganisationID int    `json:"OrganisationID"`
-	Exp            int    `json:"exp"`
-	FirstName      string `json:"firstName"`
-	Iat            int    `json:"iat"`
-	LastName       string `json:"lastName"`
-	Role           string `json:"role"`
-	User           string `json:"user"`
+type JwtClaimsStruct struct {
+	Admin               bool   `json:"Admin"`
+	Authenticated       bool   `json:"Authenticated"`
+	Email               string `json:"Email"`
+	FirstAuthentication bool   `json:"FirstAuthentication"`
+	Firstname           string `json:"Firstname"`
+	Information         string `json:"Information"`
+	Institution         string `json:"Institution"`
+	InstitutionID       uint   `json:"InstitutionID"`
+	IPAddress           string `json:"IpAddress"`
+	Lastname            string `json:"Lastname"`
+	Mobile              string `json:"Mobile"`
+	OrganisationID      uint   `json:"OrganisationID"`
+	School              string `json:"School"`
+	TwoFac              bool   `json:"TwoFac"`
+	UserID              uint   `json:"UserID"`
+	Username            string `json:"Username"`
+	Exp                 int    `json:"exp"`
+	Iat                 int    `json:"iat"`
 }
 
 func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB) (string, error) {
@@ -72,7 +82,7 @@ func base64url_decode(b []byte) ([]byte, error) {
 	return decoded, nil
 }
 
-func decodePayload(input string) (jwtdata data, err error) {
+func decodePayload(input string) (jwtdata JwtClaimsStruct, err error) {
 	a, err := base64url_decode([]byte(input))
 	if err != nil {
 		return
