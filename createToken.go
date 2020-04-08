@@ -25,7 +25,7 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 		"Email":          user.Email,
 		"OrganisationID": user.OrganisationID,
 		"role":           role,
-		"exp":            time.Now().Add(time.Minute * time.Duration(1)).Unix(),
+		"exp":            time.Now().Add(time.Minute * time.Duration(60)).Unix(),
 		"iat":            time.Now().Unix(),
 	})
 
