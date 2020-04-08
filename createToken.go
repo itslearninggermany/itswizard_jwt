@@ -49,8 +49,7 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 
 	//Store And logout
 	var jwtSession JwtSession
-	if dbWebserver.Where("user_name = ?", username).First(&jwtSession).RecordNotFound()
-	{
+	if dbWebserver.Where("user_name = ?", username).First(&jwtSession).RecordNotFound() {
 		jwtSession.UserName = username
 		jwtSession.Token = tokenString
 	} else {
@@ -59,7 +58,7 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 
 	err = dbWebserver.Save(&jwtSession).Error
 	if err != nil {
-		return "","",err
+		return "", "", err
 	}
 	//
 	auth := CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
