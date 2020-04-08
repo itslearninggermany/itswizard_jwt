@@ -32,7 +32,7 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 		Firstname:           claims["Firstname"].(string),
 		Lastname:            claims["Lastname"].(string),
 		Mobile:              claims["Mobile"].(string),
-		IpAddress:           claims["IPAddress"].(string),
+		IpAddress:           fmt.Sprint(claims["IPAddress"]),
 		Institution:         claims["Institution"].(string),
 		School:              claims["School"].(string),
 		Email:               claims["Email"].(string),
