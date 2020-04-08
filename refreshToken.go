@@ -57,10 +57,12 @@ func (p *RefreshToken) Valid(username string) bool {
 		exist = true
 	} else {
 		return false
+		fmt.Println(p.Username, username)
 	}
 
 	if exist {
 		if getHoursScinceCreatet(p.CreatedAt) > 0 {
+			fmt.Println(getHoursScinceCreatet(p.CreatedAt))
 			return false
 		} else {
 			return true
