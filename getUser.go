@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.SessionUser, err error) {
+//itszwizard_objects.SessionUser
+func GetUser(r *http.Request, dbWebserver *gorm.DB) (user string, err error) {
 	auth, err := DecodeAuthentification(r, dbWebserver)
 	if err != nil {
 		return user, err
@@ -21,8 +22,11 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 		payload = erg[1]
 	}
 
-	jwtClaims, err := decodePayload(payload)
-	fmt.Println(jwtClaims)
+	a, err := base64url_decode([]byte(payload))
+	if err != nil {
+		return
+	}
 
+	user = string(a)
 	return
 }
