@@ -72,5 +72,5 @@ func (p *RefreshToken) Valid(username string) bool {
 
 func getHoursScinceCreatet(input time.Time) float64 {
 	aus := time.Now().Sub(input)
-	return aus.Minutes()
+	return aus.Hours()
 }
