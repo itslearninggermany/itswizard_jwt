@@ -9,8 +9,8 @@ import (
 
 type JwtSession struct {
 	gorm.Model
-	userName string `gorm:"unique"`
-	token    string
+	UserName string `gorm:"unique"`
+	Token    string
 }
 
 func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string, err error) {
@@ -50,10 +50,10 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 	//Store And logout
 	var jwtSession JwtSession
 	if dbWebserver.Where("user_name = ?", username).First(&jwtToken).RecordNotFound() {
-		jwtSession.userName = username
-		jwtSession.token = tokenString
+		jwtSession.UserName = username
+		jwtSession.Token = tokenString
 	} else {
-		jwtSession.token = tokenString
+		jwtSession.Token = tokenString
 	}
 	dbWebserver.Save(&jwtSession)
 
