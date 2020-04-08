@@ -1,8 +1,6 @@
 package itswizard_jwt
 
 import (
-	"fmt"
-	"github.com/itslearninggermany/itszwizard_objects"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"strings"
