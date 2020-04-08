@@ -1,14 +1,11 @@
 package itswizard_jwt
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/itslearninggermany/uploadrest"
 	"github.com/jinzhu/gorm"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -38,16 +35,16 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var payload string
-	erg := strings.Split(auth.IDToken, ".")
-	if len(erg) != 3 {
-		return "", err
-	} else {
-		payload = erg[1]
-	}
-	jwtClaims, err := decodePayload(payload)
 
-	exp := time.Unix(int64(jwtClaims.Exp), 0)
+	claims := jwt.MapClaims{}
+	_, err = jwt.ParseWithClaims(auth.IDToken, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(GetAuthKeys(dbWebserver).GetKey()), nil
+	})
+	if err != nil {
+		return "", err
+	}
+
+	exp := time.Unix(int64(claims["exp"].(float64)), 0)
 	if time.Now().Sub(exp) > 0 {
 
 		fmt.Println("Refresh den Cookie")
@@ -71,6 +68,7 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB) (string, error) {
 	return fmt.Sprint("?key=", out), nil
 }
 
+/*
 func base64url_decode(b []byte) ([]byte, error) {
 	if len(b)%4 != 0 {
 		b = append(b, bytes.Repeat([]byte{'='}, 4-(len(b)%4))...)
@@ -94,3 +92,4 @@ func decodePayload(input string) (jwtdata JwtClaimsStruct, err error) {
 	}
 	return
 }
+*/
