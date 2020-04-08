@@ -1,6 +1,7 @@
 package itswizard_jwt
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"net/http"
@@ -40,9 +41,22 @@ func getRefreshTokenFromDatabase(username string, dbWebserver *gorm.DB) (*Refres
 	return &rToken, err
 }
 
-func (p *RefreshToken) Valid(dbWebserver *gorm.DB) bool {
+func GetTokenFromDatatabse(tokenID string, dbWebserver *gorm.DB) *RefreshToken {
+	rt := new(RefreshToken)
+	err := dbWebserver.Where("refresh_token = ?", rt).Error
+	fmt.Println(err)
+	return rt
+}
+
+func (p *RefreshToken) Valid(username string) bool {
 	// Check if Token is in Database:
-	exist := dbWebserver.Where("refresh_token", p.RefreshToken).RecordNotFound()
+	exist := false
+	if p.Username == username {
+		exist = true
+	} else {
+		return false
+	}
+
 	if exist {
 		if getHoursScinceCreatet(p.CreatedAt) > 0 {
 			return false
