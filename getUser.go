@@ -5,6 +5,7 @@ import (
 	"github.com/itslearninggermany/itszwizard_objects"
 	"github.com/jinzhu/gorm"
 	"net/http"
+	"strings"
 )
 
 func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.SessionUser, err error) {
@@ -12,9 +13,16 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 	if err != nil {
 		return user, err
 	}
+	var payload string
+	erg := strings.Split(auth.IDToken, ".")
+	if len(erg) != 3 {
+		return user, err
+	} else {
+		payload = erg[1]
+	}
 
-	b, err := base64url_decode([]byte(auth.IDToken))
-	fmt.Println(err)
-	fmt.Println(string(b))
-	return user, err
+	jwtClaims, err := decodePayload(payload)
+	fmt.Println(jwtClaims)
+
+	return
 }
