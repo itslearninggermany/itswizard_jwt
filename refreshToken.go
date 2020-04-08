@@ -43,8 +43,10 @@ func getRefreshTokenFromDatabase(username string, dbWebserver *gorm.DB) (*Refres
 
 func GetRefreshTokenFromDatatabse(tokenID string, dbWebserver *gorm.DB) *RefreshToken {
 	var rt RefreshToken
-	err := dbWebserver.Where("refresh_token = ?", &rt).Error
-	fmt.Println(err)
+	err := dbWebserver.Where("refresh_token = ?", tokenID).Last(&rt).Error
+	if err != nil {
+		fmt.Println(err)
+	}
 	return &rt
 }
 
