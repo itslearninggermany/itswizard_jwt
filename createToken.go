@@ -48,7 +48,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 		"Firstname":           user.Firstname,
 		"Lastname":            user.Lastname,
 		"Mobile":              user.Tel,
-		"IpAddress":           fmt.Sprint(ip[0]),
+		"IpAddress":           fmt.Sprint("IP:", ip[0]),
 		"Institution":         inst.Name,
 		"School":              orga.Name,
 		"Email":               user.Email,
