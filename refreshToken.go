@@ -66,6 +66,7 @@ func (p *RefreshToken) Valid(username string) bool {
 			return false
 		} else {
 			return true
+			fmt.Println(getMinutesScinceCreatet(p.CreatedAt))
 		}
 	} else {
 		return false
