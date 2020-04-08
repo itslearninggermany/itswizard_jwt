@@ -1,12 +1,9 @@
 package itswizard_jwt
 
 import (
-	"bytes"
-	"encoding/base64"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/itslearninggermany/itswizard_basic"
-	"github.com/itslearninggermany/itswizard_jwt"
 	"github.com/itslearninggermany/itszwizard_objects"
 	"github.com/jinzhu/gorm"
 	"net/http"
@@ -92,7 +89,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 }
 
 func getUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.SessionUser, err error) {
-	auth, err := itswizard_jwt.DecodeAuthentification(r, dbWebserver)
+	auth, err := DecodeAuthentification(r, dbWebserver)
 	if err != nil {
 		return user, err
 	}
