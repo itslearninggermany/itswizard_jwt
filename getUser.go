@@ -24,8 +24,8 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 	}
 
 	user = itszwizard_objects.SessionUser{
-		Username:            claims["Username"].(string),
-		UserID:              claims["UserID"].(uint),
+		Username: claims["Username"].(string),
+		//		UserID:              uint(claims["UserID"].(int)),
 		FirstAuthentication: claims["FirstAuthentication"].(bool),
 		Authenticated:       claims["Authenticated"].(bool),
 		TwoFac:              claims["TwoFac"].(bool),
