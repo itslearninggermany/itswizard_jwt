@@ -87,15 +87,3 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 
 	return auth, tokenString, err
 }
-
-func getUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.SessionUser, err error) {
-	auth, err := DecodeAuthentification(r, dbWebserver)
-	if err != nil {
-		return user, err
-	}
-
-	b, err := base64url_decode([]byte(auth.IDToken))
-	fmt.Println(err)
-	fmt.Println(string(b))
-	return user, err
-}
