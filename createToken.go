@@ -7,7 +7,14 @@ import (
 	"time"
 )
 
+type JwtSession struct {
+	gorm.Model
+	userName string `gorm:"unique"`
+	token    string
+}
+
 func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string, err error) {
+
 	var user itswizard_basic.DbItswizardUser15
 	dbUser.Where("username = ?", username).First(&user)
 
@@ -40,6 +47,17 @@ func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJs
 		return "", "", err
 	}
 
+	//Store And logout
+	var jwtSession JwtSession
+	if dbWebserver.Where("user_name = ?", username).First(&jwtToken).RecordNotFound() {
+		jwtSession.userName = username
+		jwtSession.token = tokenString
+	} else {
+		jwtSession.token = tokenString
+	}
+	dbWebserver.Save(&jwtSession)
+
+	//
 	auth := CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
 
 	return auth, tokenString, err
