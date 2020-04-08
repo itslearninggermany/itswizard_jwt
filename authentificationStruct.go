@@ -43,7 +43,6 @@ func CreateNewAuthUrl(AccessToken, IDToken, RefreshToken string, dbWebserver *go
 
 func DecodeAuthentification(r *http.Request, dbWebserver *gorm.DB) (auth Authentication, err error) {
 	res := r.URL.Query()["key"]
-	fmt.Println(res[0])
 	if len(res) == 0 {
 		return auth, errors.New("no token")
 	} else {
