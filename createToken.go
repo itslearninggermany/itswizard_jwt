@@ -24,7 +24,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 	}
 
 	var orga itswizard_basic.DbOrganisation15
-	err = dbUser.Where("id = ?").First(&orga).Error
+	err = dbUser.Where("id = ?", user.OrganisationID).First(&orga).Error
 	if err != nil {
 		return "", "", err
 	}
