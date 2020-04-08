@@ -1,6 +1,7 @@
 package itswizard_jwt
 
 import (
+	"fmt"
 	"github.com/itslearninggermany/itszwizard_objects"
 	"github.com/jinzhu/gorm"
 	"net/http"
@@ -11,6 +12,7 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 	if err != nil {
 		return user, err
 	}
+	fmt.Println(auth.IDToken)
 
 	jwtData, err := decodePayload(auth.IDToken)
 	if err != nil {
@@ -35,5 +37,6 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 		OrganisationID:      jwtData.OrganisationID,
 		InstitutionID:       jwtData.InstitutionID,
 	}
+
 	return
 }
