@@ -10,7 +10,7 @@ import (
 type JwtSession struct {
 	gorm.Model
 	UserName string `gorm:"unique"`
-	Token    string
+	Token    string `gorm:"type:MEDIUMTEXT"`
 }
 
 func CreateToken(username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string, err error) {
