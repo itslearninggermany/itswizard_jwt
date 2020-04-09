@@ -14,14 +14,28 @@ func Logout(r *http.Request, dbWebserver *gorm.DB) {
 		return
 	}
 
-	err = dbWebserver.Delete("refresh_token = ?", auth.RefreshToken).Error
+	var rtoken RefreshToken
+	err = dbWebserver.Where("refresh_token = ?", auth.RefreshToken).First(&rtoken).Error
+	if err != nil {
+		// TODO: HHTP Redirect
+		fmt.Println(err)
+		return
+	}
+	err = dbWebserver.Delete(&rtoken).Error
 	if err != nil {
 		// TODO: HHTP Redirect
 		fmt.Println(err)
 		return
 	}
 
-	err = dbWebserver.Where("token = ?", auth.IDToken).Error
+	var jwtSession JwtSession
+	err = dbWebserver.Where("token = ?", auth.IDToken).First(&jwtSession).Error
+	if err != nil {
+		// TODO: HHTP Redirect
+		fmt.Println(err)
+		return
+	}
+	err = dbWebserver.Delete(&jwtSession).Error
 	if err != nil {
 		// TODO: HHTP Redirect
 		fmt.Println(err)
