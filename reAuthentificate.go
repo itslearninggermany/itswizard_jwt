@@ -40,15 +40,7 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) st
 		rtoken := GetRefreshTokenFromDatatabse(auth.RefreshToken, dbWebserver)
 
 		if rtoken.Valid(claims["Username"].(string)) {
-
-			authJson, _, err := CreateToken(r, claims["Username"].(string), dbUser, dbWebserver)
-			if err != nil {
-				// TODO: HHTP Redirect
-				fmt.Println(errors.New("Refresh-Token valid. Can't create JWT-Token!"))
-				return ""
-			}
-			return authJson
-
+			return CreateToken(r, claims["Username"].(string), dbUser, dbWebserver)
 		} else {
 			// TODO: HHTP Redirect
 			fmt.Println(errors.New("Refresh-Token and JWT-Token ist not valid!"))
