@@ -35,7 +35,7 @@ func Logout(r *http.Request, dbWebserver *gorm.DB) {
 		fmt.Println(err)
 		return
 	}
-	err = dbWebserver.Delete(&jwtSession).Error
+	err = dbWebserver.Unscoped().Delete(&jwtSession).Error
 	if err != nil {
 		// TODO: HHTP Redirect
 		fmt.Println(err)
