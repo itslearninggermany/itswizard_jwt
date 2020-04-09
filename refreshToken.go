@@ -61,7 +61,7 @@ func (p *RefreshToken) Valid(username string) bool {
 	}
 
 	if exist {
-		if getMinutesScinceCreatet(p.CreatedAt) > 120 {
+		if getMinutesScinceCreatet(p.CreatedAt) > 70 {
 			fmt.Println(getMinutesScinceCreatet(p.CreatedAt))
 			return false
 		} else {
