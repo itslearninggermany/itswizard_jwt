@@ -16,28 +16,33 @@ type JwtSession struct {
 	Token    string `gorm:"type:MEDIUMTEXT"`
 }
 
-func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authJson string, jwtToken string, err error) {
+func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver *gorm.DB) string {
 
 	var user itswizard_basic.DbItswizardUser15
-	err = dbUser.Where("username = ?", username).First(&user).Error
+	err := dbUser.Where("username = ?", username).First(&user).Error
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
 
 	var orga itswizard_basic.DbOrganisation15
 	err = dbUser.Where("id = ?", user.OrganisationID).First(&orga).Error
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
 
 	var inst itswizard_basic.DbInstitution15
 	err = dbUser.Where("id = ?", orga.InstitutionID).First(&inst).Error
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
 
 	ip := strings.Split(r.RemoteAddr, ":")
-	fmt.Println(ip)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"Username":            username,
@@ -62,13 +67,17 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 
 	tokenString, err := token.SignedString(GetAuthKeys(dbWebserver).GetKey())
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
 
 	refreshToken := createRefreshToken(username)
 	err = refreshToken.StoreInDatatbae(dbWebserver)
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
 
 	//Store And logout
@@ -82,10 +91,10 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 
 	err = dbWebserver.Save(&jwtSession).Error
 	if err != nil {
-		return "", "", err
+		// TODO HTTP REDIRECT
+		fmt.Println(err)
+		return ""
 	}
-	//
-	auth := CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
 
-	return auth, tokenString, err
+	return CreateNewAuthUrl("123", tokenString, refreshToken.String(), dbWebserver)
 }
