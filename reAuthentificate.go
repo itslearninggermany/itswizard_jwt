@@ -32,7 +32,7 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) st
 	fmt.Println("exp: ", exp)
 
 	// Is the token valid
-	if time.Now().Sub(exp) > 0 {
+	if time.Now().Sub(exp) < 0 {
 		// Not valid
 
 		fmt.Println("Refresh den Cookie")
