@@ -9,10 +9,12 @@ import (
 	"time"
 )
 
-func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) (string, error) {
+func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) string {
 	auth, err := DecodeAuthentification(r, dbWebserver)
 	if err != nil {
-		return "", err
+		// TODO: HHTP Redirect
+		fmt.Println(err)
+		return ""
 	}
 
 	claims := jwt.MapClaims{}
@@ -20,7 +22,9 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) (s
 		return []byte(GetAuthKeys(dbWebserver).GetKey()), nil
 	})
 	if err != nil {
-		return "", err
+		// TODO: HHTP Redirect
+		fmt.Println(err)
+		return ""
 	}
 
 	exp := time.Unix(int64(claims["exp"].(float64)), 0)
@@ -39,20 +43,26 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) (s
 
 			authJson, _, err := CreateToken(r, claims["Username"].(string), dbUser, dbWebserver)
 			if err != nil {
-				return "", errors.New("Refresh-Token valid. Can't create JWT-Token!")
+				// TODO: HHTP Redirect
+				fmt.Println(errors.New("Refresh-Token valid. Can't create JWT-Token!"))
+				return ""
 			}
-			return authJson, err
+			return authJson
 
 		} else {
-			return "", errors.New("Refresh-Token and JWT-Token ist not valid!")
+			// TODO: HHTP Redirect
+			fmt.Println(errors.New("Refresh-Token and JWT-Token ist not valid!"))
+			return ""
 		}
 	} else {
 		//Valid
 		//The Token is valid
 		res := r.URL.Query()["key"]
 		if len(res) == 0 {
-			return "", errors.New("Problem with Toke in URL")
+			// TODO: HHTP Redirect
+			fmt.Println(errors.New("Problem with Toke in URL"))
+			return ""
 		}
-		return fmt.Sprint("?key=", res[0]), nil
+		return fmt.Sprint("?key=", res[0])
 	}
 }
