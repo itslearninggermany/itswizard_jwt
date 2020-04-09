@@ -53,6 +53,6 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB) (string, error) {
 		if len(res) == 0 {
 			return "", errors.New("Problem with Toke in URL")
 		}
-		return fmt.Sprint("?key=", res), nil
+		return fmt.Sprint("?key=", res[0]), nil
 	}
 }
