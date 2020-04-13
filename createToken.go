@@ -20,7 +20,7 @@ type JwtSession struct {
 func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver *gorm.DB) (authString string, sessionUser itszwizard_objects.SessionUser, err error) {
 
 	var user itswizard_basic.DbItswizardUser15
-	err := dbUser.Where("username = ?", username).First(&user).Error
+	err = dbUser.Where("username = ?", username).First(&user).Error
 	if err != nil {
 		fmt.Println(err)
 		return "", sessionUser, err
