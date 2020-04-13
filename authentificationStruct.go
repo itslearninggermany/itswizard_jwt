@@ -7,6 +7,7 @@ import (
 	"github.com/itslearninggermany/uploadrest"
 	"github.com/jinzhu/gorm"
 	"net/http"
+	"net/url"
 )
 
 type Authentication struct {
@@ -46,7 +47,11 @@ func DecodeAuthentification(r *http.Request, dbWebserver *gorm.DB) (auth Authent
 	if len(res) == 0 {
 		return auth, errors.New("no token")
 	} else {
-		tmp, err := uploadrest.Decrypt(GetAuthKeys(dbWebserver).GetAes(), res[0])
+		token, err := url.PathUnescape(res[0])
+		if err != nil {
+			return auth, err
+		}
+		tmp, err := uploadrest.Decrypt(GetAuthKeys(dbWebserver).GetAes(), token)
 		if err != nil {
 			return auth, err
 		}
