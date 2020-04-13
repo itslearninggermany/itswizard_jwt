@@ -38,7 +38,7 @@ func CreateNewAuthUrl(AccessToken, IDToken, RefreshToken string, dbWebserver *go
 	if err != nil {
 		fmt.Println(err)
 	}
-	return fmt.Sprint("?key=", out)
+	return fmt.Sprint(out)
 }
 
 func DecodeAuthentification(r *http.Request, dbWebserver *gorm.DB) (auth Authentication, err error) {

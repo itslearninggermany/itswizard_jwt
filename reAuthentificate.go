@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -53,6 +54,13 @@ func ReAuthentificate(r *http.Request, dbWebserver *gorm.DB, dbUser *gorm.DB) st
 			fmt.Println(errors.New("Problem with Toke in URL"))
 			return ""
 		}
-		return fmt.Sprint("?key=", res[0])
+		jwttoken, err := url.PathUnescape(res[0])
+		if err != nil {
+			// TODO: HHTP Redirect
+			fmt.Println(err)
+			return ""
+		}
+
+		return jwttoken
 	}
 }
