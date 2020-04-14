@@ -13,7 +13,6 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 	if err != nil {
 		return user, err
 	}
-	fmt.Println(auth.IDToken)
 
 	claims := jwt.MapClaims{}
 	_, err = jwt.ParseWithClaims(auth.IDToken, claims, func(token *jwt.Token) (interface{}, error) {

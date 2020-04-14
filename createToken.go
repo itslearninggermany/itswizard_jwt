@@ -58,7 +58,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 		"School":              orga.Name,
 		"Email":               user.Email,
 		"Information":         "--",
-		"Admin":               false,
+		"Admin":               user.Admin,
 		"OrganisationID":      orga.ID,
 		"InstitutionID":       inst.ID,
 		"exp":                 time.Now().Add(time.Minute * time.Duration(60)).Unix(),
@@ -79,7 +79,7 @@ func CreateToken(r *http.Request, username string, dbUser *gorm.DB, dbWebserver 
 		School:              orga.Name,
 		Email:               user.Email,
 		Information:         "--",
-		Admin:               false,
+		Admin:               user.Admin,
 		OrganisationID:      orga.ID,
 		InstitutionID:       inst.ID,
 	}
