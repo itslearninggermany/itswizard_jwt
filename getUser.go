@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/itslearninggermany/itswizard_jwt"
 	"github.com/itslearninggermany/itszwizard_objects"
 	"github.com/itslearninggermany/uploadrest"
 	"github.com/jinzhu/gorm"
@@ -49,8 +48,8 @@ func GetUser(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.Ses
 }
 
 func GetUserRest(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects.SessionUser, err error) {
-	tmp, err := uploadrest.Decrypt(itswizard_jwt.GetAuthKeys(dbWebserver).GetAes(), r.Header.Get("Authorization"))
-	var auth itswizard_jwt.Authentication
+	tmp, err := uploadrest.Decrypt(GetAuthKeys(dbWebserver).GetAes(), r.Header.Get("Authorization"))
+	var auth Authentication
 	err = json.Unmarshal([]byte(tmp), &auth)
 	if err != nil {
 		return user, err
@@ -58,7 +57,7 @@ func GetUserRest(r *http.Request, dbWebserver *gorm.DB) (user itszwizard_objects
 
 	claims := jwt.MapClaims{}
 	_, err = jwt.ParseWithClaims(auth.IDToken, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(itswizard_jwt.GetAuthKeys(dbWebserver).GetKey()), nil
+		return []byte(GetAuthKeys(dbWebserver).GetKey()), nil
 	})
 
 	if err != nil {
