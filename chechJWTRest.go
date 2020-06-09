@@ -27,6 +27,8 @@ func CheckJWTRest(w http.ResponseWriter, r *http.Request, dbwebserver *gorm.DB) 
 			return
 		},
 	})
-
-	return jwtMiddleware.CheckJWT(w, r)
+	err := jwtMiddleware.CheckJWT(w, r)
+	fmt.Println("sdfsdf")
+	fmt.Println(err)
+	return err
 }
