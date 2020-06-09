@@ -2,6 +2,7 @@ package itswizard_jwt
 
 import (
 	"encoding/json"
+	"fmt"
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/itslearninggermany/uploadrest"
@@ -22,7 +23,8 @@ func CheckJWTRest(w http.ResponseWriter, r *http.Request, dbwebserver *gorm.DB) 
 			return auth.IDToken, err
 		},
 		ErrorHandler: func(w http.ResponseWriter, r *http.Request, err string) {
-			http.Error(w, err, http.StatusUnauthorized)
+			fmt.Fprint(w, err)
+			return
 		},
 	})
 
